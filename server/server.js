@@ -24,15 +24,17 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use(cors());
 
+app.get("/*", function (req, res) {
+    res.sendFile(
+        path.join(__dirname, "../client/build/index.html"),
+        function (err) {
+            if (err) {
+                res.status(500).send(err);
+            }
+        }
+    );
+});
 
-
-// app.use(cors({
-//     origin: 'http://localhost:3000',
-//     methods: 'GET,POST,PUT,DELETE',
-//     credentials: true,
-// }));
-
-// create user account
 app.get('/account/create/:name/:email/:password', function (req, res) {
 
     // check if account exists
