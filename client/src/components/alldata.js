@@ -4,10 +4,9 @@ import { Card } from "./context";
 
 export function AllData() {
     const [data , setData] = useState('');
-    // const baseUrl = process.env.NODE_ENV === 'production' ? '' : 'http://localhost:3500';
-    const baseUrl = process.env.PORT || 'http://localhost:3000';
-
-   // const baseUrl = process.env.NODE_ENV === 'production' ? 'https://obscure-journey-92886-10494df772df.herokuapp.com/' : 'http://localhost:3500/';
+    //const baseUrl = process.env.PORT || 4000;
+    const baseUrl = process.env.REACT_APP_API_BASE_URL;
+    //const baseUrl = 'https://hrku-cap-badbank-24d2d96dbd11.herokuapp.com';
 
     useEffect(() => {
         const fetchData = async () => {

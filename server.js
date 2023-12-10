@@ -8,7 +8,7 @@ const e = require('express');
 
 //CRUD
 console.log("~~~~CRUD~~~~~~")
-console.log(process.env.MONGO_URI);
+console.log(process.env.REACT_APP_MONGO_URL);
 console.log("~~~~~~~~~~")
 
 //path info
@@ -18,23 +18,21 @@ console.log("~~~~PORT~~~~~~~~")
 console.log(process.env.PORT);
 console.log("~~~~~~~~~~~~")
 
+//search for a build of react app if production
+if (process.env.NODE_ENV === 'production' || process.env.NODE_ENV === 'staging') {
+    app.use(express.static('client/build'));
+    app.get('*', (req, res) => {
+        res.sendFile(path.join(__dirname + '/client/build/index.html'));
+    });
+}
+
 // used to serve static files from public directory
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.use(cors());
 
-app.get("/*", function (req, res) {
-    res.sendFile(
-        path.join(__dirname, "../client/build/index.html"),
-        function (err) {
-            if (err) {
-                res.status(500).send(err);
-            }
-        }
-    );
-});
-
+// create user account
 app.get('/account/create/:name/:email/:password', function (req, res) {
 
     // check if account exists
@@ -58,24 +56,40 @@ app.get('/account/create/:name/:email/:password', function (req, res) {
 
 
 // login user 
+// app.get('/account/login/:email/:password', function (req, res) {
+
+//     dal.find(req.params.email).then((user) => {
+
+//         // if user exists, check password
+//         if (user.length > 0) {
+//             if (user[0].password === req.params.password) {
+//                 res.send(user[0]);
+//             }
+//             else {
+//                 res.send('Login failed: wrong password');
+//             }
+//         }
+//         else {
+//             res.send('Login failed: user not found');
+//         }
+//     });
+
+// });
+
+// login user 
 app.get('/account/login/:email/:password', function (req, res) {
-
     dal.find(req.params.email).then((user) => {
-
         // if user exists, check password
         if (user.length > 0) {
             if (user[0].password === req.params.password) {
-                res.send(user[0]);
+                res.json(user[0]); // send user as JSON
+            } else {
+                res.status(401).json({ error: 'Login failed: wrong password' });
             }
-            else {
-                res.send('Login failed: wrong password');
-            }
-        }
-        else {
-            res.send('Login failed: user not found');
+        } else {
+            res.status(401).json({ error: 'Login failed: user not found' });
         }
     });
-
 });
 
 // deposit to a user account
@@ -138,7 +152,7 @@ app.get('/account/all', function (req, res) {
     });
 });
 
-//const port = process.env.REACT_APP_PORT || 'http://localhost:3000';
-//console.log('Running on port: ' + port);
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log(`Server is running on port ${PORT}`));
+const port = process.env.REACT_APP_PORT || 'http://localhost:3500';
+console.log('Running on port: ' + port);
+//const PORT = process.env.PORT || 3500;
+//app.listen(PORT, () => console.log(`Server is running on port ${PORT}`));

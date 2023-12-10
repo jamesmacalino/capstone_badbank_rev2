@@ -22,8 +22,8 @@ const firebaseConfig = {
     storageBucket: "mybadbank-69f4e.appspot.com",
     messagingSenderId: "206687617212",
     appId: "1:206687617212:web:9d4fdc81ece15e481050b9"
-  };
-  
+};
+
 
 // Initialize Firebase
 initializeApp(firebaseConfig);
@@ -31,30 +31,39 @@ const auth = getAuth();
 const nullUser = { balance: 0 };
 
 function App() {
-    const baseUrl = process.env.PORT || 'http://localhost:3000';
-
+    //const baseUrl = process.env.PORT || 4000;
+    const baseUrl = process.env.REACT_APP_API_BASE_URL;
+    //const baseUrl = 'https://hrku-cap-badbank-24d2d96dbd11.herokuapp.com';
+    ///const baseUrl = ' ';
     const [status, setStatus] = useState('');
     const [loggedIn, setLoggedIn] = useState(false);
 
     // balance is initialized temporarily to prevent user.balance from breaking routes using it.
     const [user, setUser] = useState(nullUser);
 
-    let initializeUser = async (email, password) => {
-        try {
-            const res = await fetch(`${baseUrl}/account/login/${email}/${password}`);
-            if (!res.ok) {
-                throw new Error(`HTTP error! Status: ${res.status}`);
-            }
-            
-            const tempUser = await res.json();
-            console.log("tempUser", tempUser);
-            setUser(tempUser);
-            setLoggedIn(true);
-        } catch (err) {
-            console.log(err);
-            return "login failed";
-        }
-    }
+    let initializeUser = (email, password) => {
+        return fetch(`${baseUrl}/account/login/${email}/${password}`)
+            .then((res) => {
+                if (!res.ok) {
+                    throw new Error(`HTTP error! Status: ${res.status}`);
+                }
+                return res.json();
+            })
+            .then((tempUser) => {
+                console.log("tempUser", tempUser);
+    
+                // Add more logging to check the structure of tempUser
+                console.log("typeof tempUser", typeof tempUser);
+                console.log("tempUser instanceof Object", tempUser instanceof Object);
+    
+                setUser(tempUser);
+                setLoggedIn(true);
+            })
+            .catch((err) => {
+                console.log(err);
+                return "login failed";
+            });
+    };
 
     let adjustBalance = (amount) => {
         fetch(`${baseUrl}/account/adjust/${user.email}/${Number(amount)}`)

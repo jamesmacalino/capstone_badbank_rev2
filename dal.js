@@ -1,18 +1,41 @@
-const { MongoClient } = require('mongodb');
-const uri = "mongodb+srv://capstoneadmin:xttSOJU77BNVE8k2@capstonecluster1.qvldmd7.mongodb.net/?retryWrites=true&w=majority || 'mongodb://localhost:27017'";
-let db = null;
+const { MongoClient, ServerApiVersion } = require('mongodb');
+const { getDB } = require('./db');
+const uri = process.env.REACT_APP_MONGO_URL || 'mongodb://localhost:27017';
+//const uri = "mongodb+srv://dbadmin:SSAthAb4eCd6QeBN@capstonecluster1.qvldmd7.mongodb.net/?retryWrites=true&w=majority";
 
-// connect to mongo
-MongoClient.connect(uri, { useUnifiedTopology: true }, function (err, client) {
-    console.log("Connected successfully to db server");
+// // connect to mongo
+// MongoClient.connect(uri, { useUnifiedTopology: true }, function (err, client) {
+//     console.log("Connected successfully to db server");
 
-    try {
-        // connect to atlas capstonecluster1 database
-        db = client.db('capstonecluster1');
-    } catch (err) {
-        console.error('Error connecting to mongodb:', err);
-    }
-});
+//     try {
+//         // connect to atlas capstonecluster1 database
+//         db = client.db('capstonecluster1');
+//     } catch (err) {
+//         console.error('Error connecting to mongodb:', err);
+//     }
+// });
+
+// Create a MongoClient with a MongoClientOptions object to set the Stable API version
+// const client = new MongoClient(url, {
+//     serverApi: {
+//       version: ServerApiVersion.v1,
+//       strict: true,
+//       deprecationErrors: true,
+//     }
+//   });
+//   async function run() {
+//     try {
+//       // Connect the client to the server	(optional starting in v4.7)
+//       await client.connect();
+//       // Send a ping to confirm a successful connection
+//       await client.db("admin").command({ ping: 1 });
+//       console.log("Pinged your deployment. You successfully connected to MongoDB!");
+//     } finally {
+//       // Ensures that the client will close when you finish/error
+//       await client.close();
+//     }
+//   }
+//   run().catch(console.dir);
 
 // create user account
 function create(name, email, password) {
@@ -24,6 +47,12 @@ function create(name, email, password) {
         });
     })
 }
+
+async function connectToMongo() {
+    db = await getDB();
+}
+connectToMongo(); // Establish the initial connection when the module is imported
+
 
 // Login a user
 async function login(email, password) {
@@ -37,7 +66,8 @@ async function login(email, password) {
 
         const collection = db.collection('users');
         const docs = await collection.find().toArray();
-        const user = docs.find((user) => user.email == email);
+        const user = await collection.findOne({ email: email });
+        // const user = docs.find((user) => user.email == email);
         if (!user) {
             return false;
         }
