@@ -4,7 +4,6 @@ const path = require('path');
 const app = express();
 const cors = require('cors');
 const dal = require('./dal.js');
-const e = require('express');
 
 //CRUD
 console.log("~~~~CRUD~~~~~~")
@@ -18,18 +17,22 @@ console.log("~~~~PORT~~~~~~~~")
 console.log(process.env.PORT);
 console.log("~~~~~~~~~~~~")
 
-//search for a build of react app if production
-if (process.env.NODE_ENV === 'production' || process.env.NODE_ENV === 'staging') {
-    app.use(express.static('client/build'));
-    app.get('*', (req, res) => {
-        res.sendFile(path.join(__dirname + '/client/build/index.html'));
-    });
-}
+// //search for a build of react app if production
+// if (process.env.NODE_ENV === 'production' || process.env.NODE_ENV === 'staging') {
+//     app.use(express.static('client/build'));
+//     app.get('*', (req, res) => {
+//         res.sendFile(path.join(__dirname + '/client/build/index.html'));
+//     });
+// }
 
-// used to serve static files from public directory
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+// // used to serve static files from public directory
+// app.use(express.json());
+// app.use(express.urlencoded({ extended: true }));
 
+// app.use(cors());
+
+// serve static files from public directory
+app.use(express.static('public'));
 app.use(cors());
 
 // create user account
@@ -152,7 +155,9 @@ app.get('/account/all', function (req, res) {
     });
 });
 
-const port = process.env.REACT_APP_PORT || 'http://localhost:3500';
-console.log('Running on port: ' + port);
-//const PORT = process.env.PORT || 3500;
-//app.listen(PORT, () => console.log(`Server is running on port ${PORT}`));
+// const port = process.env.REACT_APP_PORT || 'http://localhost:3500';
+// console.log('Running on port: ' + port);
+const PORT = process.env.PORT || 3500;
+app.listen(PORT, () => {
+console.log(`Server running on port ${PORT}`)
+});

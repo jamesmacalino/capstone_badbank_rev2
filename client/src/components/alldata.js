@@ -2,12 +2,12 @@ import React from "react";
 import { useEffect, useState } from "react";
 import { Card } from "./context";
 
+// Base URL variable setting
+const baseUrl = process.env.NODE_ENV === 'production' ? '' : 'http://localhost:3500';
+
 export function AllData() {
     const [data , setData] = useState('');
-    //const baseUrl = process.env.PORT || 4000;
-    const baseUrl = process.env.REACT_APP_API_BASE_URL;
-    //const baseUrl = 'https://hrku-cap-badbank-24d2d96dbd11.herokuapp.com';
-
+    
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -18,8 +18,8 @@ export function AllData() {
                 const jsonData = await response.json();
                 setData(jsonData);
             } catch (error) {
-                console.error('Failed to fetch data:', error);
-                // Handle error appropriately
+                console.error('Data fetch failed:', error);
+                // Error handling
             }
         };
 

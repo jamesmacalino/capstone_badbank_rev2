@@ -2,10 +2,8 @@ import React from 'react';
 import { useState } from 'react';
 import {Card} from './context';
 
-//const baseUrl = process.env.PORT  ||  4000;
-const baseUrl = process.env.REACT_APP_API_BASE_URL;
-//const baseUrl = 'https://hrku-cap-badbank-24d2d96dbd11.herokuapp.com';
-//const baseUrl = ' ';
+// Base URL variable setting
+const baseUrl = process.env.NODE_ENV === 'production' ? '' : 'http://localhost:3500';
 
 export function CreateAccount({ initializeUser, createWithFirebase }) {
   const [show, setShow] = useState(true);

@@ -1,6 +1,7 @@
+import React from "react";
 import { useState } from "react";
 import { Card } from "./context";
-import { useValidateAmounts } from "./misc/useValidateAmounts";
+import { useValidateAmounts } from "./misc/useValidateAmounts"
 
 export function Withdraw({ adjustBalance, balance }) {
     const [status, setStatus] = useState('');

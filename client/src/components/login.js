@@ -1,5 +1,6 @@
+import React from "react";
 import { useState } from "react";
-import { Card } from "./context";
+import { Card } from "./context"
 
 export function Login({ logIn }) {
     const [statusMessage, setStatusMessage] = useState('');
