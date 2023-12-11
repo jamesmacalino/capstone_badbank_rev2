@@ -155,8 +155,16 @@ app.get('/account/all', function (req, res) {
     });
 });
 
-// const port = process.env.REACT_APP_PORT || 'http://localhost:3500';
-// console.log('Running on port: ' + port);
+// serve static files from React app if in production
+if (process.env.NODE_ENV === 'production') {
+    // set static folder
+    app.use(express.static('client/build'));
+    
+    app.get('*', (req, res) => {
+        res.sendFile(path.resolve(__dirname, 'client', 'build', 'index.html'));
+    });
+    }
+
 const PORT = process.env.PORT || 3500;
 app.listen(PORT, () => {
 console.log(`Server running on port ${PORT}`)
