@@ -1,6 +1,14 @@
-const { MongoClient, ServerApiVersion } = require('mongodb');
-const { getDB } = require('./db');
+const MongoClient = require('mongodb').MongoClient;
 const uri = process.env.REACT_APP_MONGO_URL || 'mongodb://localhost:27017';
+let db  = null;
+
+// connect to mongo
+MongoClient.connect(uri, {useUnifiedTopology: true}, function(err, client) {
+    console.log("connected successfully to db...");
+
+    // connect to database
+    db = client.db('capstonecluster1');
+});
 
 // create user account
 function create(name, email, password) {
